@@ -26,3 +26,7 @@ There are some things you need to have working before you can use this hack solu
 * I don't think the usualy Gree applications work like this, at all. They don't really, for me, at least. **Homeassistant** is an amazing project and it works flawlessly, however! _(Including the automatic discovery and all!)_ Check it out, so much better than the stock apps anyway [with zero homecalls :)] )_
 * Nothing else really. After setting all up I tried shutting down the fake server for a few hours and then firing it back up. The HVAC unit tolerated it nicely, nothing stopped working. I can imagine having the fake server not running for a very long time could cause the HVAC unit to lose its s#*t and start the discovery process again but that would work just fine too since the DNS for the discovery server _(dis.gree.com)_ is overriden :)
 * Absolutely worst case you need to do the registration procedure again. It takes < 1 min. and I never had to do it again, save for the testing. _(In HomeAssistant after re-registrations you may need to reload the Gree module - no need to restart HomeAssistant!)_
+
+# Saying thanks..
+* .. to tomikaa87 for his project gree-remote: https://github.com/tomikaa87/gree-remote
+* .. to emtek-at for their project GreeAC-DummyServer: https://github.com/emtek-at/GreeAC-DummyServer
