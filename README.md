@@ -17,6 +17,7 @@ There are some things you need to have working before you can use this hack solu
 
 # Setting it all up
 1. Download, review, edit to your needs or simply jump to building & running the fake sever. _(The bare minimum you should probably change is the IP address in the docker-compose.yml file to fit into your subnet in which the HVAC unit will reside too.)_
+`docker-compose build && docker-compose up -d`
 2. Turn off the HVAC unit and reset the WiFi settings _(MODE + WIFI usually)_
 3. Wait ~ 2 minutes and once the HVAC unit's WiFi comes online, connect to it from a laptop or some other device! (SSID will be the last few bytes of its MAC address, the password is `12345678`)
 4. Run `python3 register.py YOUR_WIFI'S_SSID YOUR_WIFI'S_PASSWORD`
