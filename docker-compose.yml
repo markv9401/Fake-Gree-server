@@ -1,19 +1,19 @@
 version: '3.2'
 services:
     fakegree:
-    image: fakegree
-    build: fakegree
-    restart: always
-    volumes:
+      image: fakegree
+      build: fakegree
+      restart: always
+      volumes:
       - ./fakegree:/fakegree
-    environment:
-      IP: 192.168.0.69  # change this to a free IP in the HVAC's subnet
-      PORT: 1812 # leave this
-      HOSTNAME: dis.gree.com # leave this
-    networks:
-      dirty:
-        ipv4_address: 192.168.0.69 # must match the IP above
-
+      environment:
+        IP: 192.168.0.69  # change this to a free IP in the HVAC's subnet
+        TLS: False # Change this if you have a new unit that uses TLS
+        PORT: 1812 # leave this
+        HOSTNAME: dis.gree.com # change to eu.dis.gree.com for europe
+      networks:
+        dirty:
+          ipv4_address: 192.168.0.69 # must match the IP above
 networks:
   dirty:
     driver: macvlan

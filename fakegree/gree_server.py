@@ -5,16 +5,20 @@ import sys
 from datetime import datetime
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
+import ssl
+from scapy.all import *
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 class GreeSrv:
-    def __init__(self, ip, port, hostname):
+    def __init__(self, ip, port, hostname, tls):
         if not ip or not port or not hostname:
             print('* IP, Port and Hostname need to be set!')
             exit(1)
         self.ip = ip
         self.port = port
         self.hostname = hostname
+        self.tls = eval(tls)
         self.srv = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)#SOCK_DGRAM)
         self.cmd = self.Cmd(self.ip, self.port, self.hostname)
         self.instruct()
@@ -37,18 +41,28 @@ class GreeSrv:
        print()
 
     def serve(self):
+        print(f'{self.ip}, {self.port}')
         self.srv.bind((self.ip, self.port))
         self.srv.listen()
         print('* Server is running on (tcp) {}:{}, DNS A record: {}'.format(self.ip, self.port, self.hostname))
 
         while True:
             conn, address = self.srv.accept()
-            with conn:
-                keep_alive = True
-                while keep_alive:
-                    message = conn.recv(1024)
-                    keep_alive, response = self.cmd.process(message)
-                    conn.sendall(response)
+            client_handler = threading.Thread(target=self.handle_client, args=(conn, address))
+            client_handler.start()
+
+    def handle_client(self, conn, address):
+        if self.tls is True:
+            print(f"SSL handshake started with client: {address}")
+            conn = self.handle_handshake_tls(conn)
+            print(f"SSL handshake ended with client: {address}")
+
+        with conn:
+            keep_alive = True
+            while keep_alive:
+                message = conn.recv(1024)
+                keep_alive, response = self.cmd.process(message)
+                conn.sendall(response)
 
     class Cmd:
         def __init__(self, ip, port, hostname):
@@ -169,8 +183,13 @@ class GreeSrv:
             except Exception as E:
                     print('* Exception: {} on message {}'.format(str(E), str(msg)))
                     return False, b''
+    def handle_handshake_tls(self, conn):
+        client_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        client_context.load_cert_chain(certfile='server.crt', keyfile='server.key')
+        ssl_client_conn = client_context.wrap_socket(conn, server_side=True)
+        return ssl_client_conn
 
 
 ####
-GreeSrv(sys.argv[1], int(sys.argv[2]), sys.argv[3])
+GreeSrv(sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4])
 
