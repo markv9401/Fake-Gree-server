@@ -1,6 +1,6 @@
 import base64
 import json
-import socket
+import os
 import sys
 from datetime import datetime
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -184,12 +184,27 @@ class GreeSrv:
                     print('* Exception: {} on message {}'.format(str(E), str(msg)))
                     return False, b''
     def handle_handshake_tls(self, conn):
-        client_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-        client_context.load_cert_chain(certfile='server.crt', keyfile='server.key')
-        ssl_client_conn = client_context.wrap_socket(conn, server_side=True)
+        server_context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        server_context.load_cert_chain(certfile='server.crt', keyfile='server.key')
+
+        # Set cipher suites to include a broader range
+        server_context.set_ciphers("ALL:@SECLEVEL=1")  # Adjust security level if needed
+
+        ssl_client_conn = server_context.wrap_socket(conn, server_side=True)
         return ssl_client_conn
 
 
+host_input = os.getenv("SERVER_HOST", "127.0.0.1")
+port_input = int(os.getenv("SERVER_PORT", "1813"))
+hostname_input = os.getenv("SERVER_DOMAIN", "eu.dis.gree.com")
+tls_input = os.getenv("TLS", "False")
 ####
-GreeSrv(sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4])
+print('******************************************************')
+print(f"Host: {host_input}")
+print(f"Port: {port_input}")
+print(f"Hostname: {hostname_input}")
+print(f"TLS: {tls_input}")
+print('******************************************************')
+
+GreeSrv(host_input, port_input, hostname_input, tls_input)
 

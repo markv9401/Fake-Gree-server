@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  gree_server:
+    build: .
+    container_name: gree_server
+    ports:
+      - "1813:1813"
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=1813
+      - SERVER_DOMAIN=eu.dis.gree.com
+      - TLS=True
+      - PYTHONUNBUFFERED=1  # Ensure Python output isn't buffered

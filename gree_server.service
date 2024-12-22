@@ -1,0 +1,13 @@
+[Unit]
+Description=Gree Server Service
+After=network.target
+
+[Service]
+Type=simple
+User=pokelab
+WorkingDirectory=<changeme>/gree/Fake-Gree-server/fakegree
+ExecStart=<changeme>/gree/Fake-Gree-server/fakegree/venv/bin/python <changeme>/gree/Fake-Gree-server/fakegree/gree_server.py 0.0.0.0 1813 eu.dis.gree.com True
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
