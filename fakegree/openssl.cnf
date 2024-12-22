@@ -1,0 +1,15 @@
+[ req ]
+default_bits        = 2048
+default_md          = sha256
+default_keyfile     = server.key
+distinguished_name  = req_distinguished_name
+prompt              = no
+
+[ req_distinguished_name ]
+C             = US
+ST            = California
+L             = San Francisco
+O             = My Company
+OU            = My Division
+CN            = example.com
+emailAddress  = email@example.com
